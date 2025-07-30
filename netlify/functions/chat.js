@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-
 exports.handler = async function(event) {
   const body = JSON.parse(event.body || "{}");
   const userMessage = body.message || "";
@@ -23,11 +21,15 @@ exports.handler = async function(event) {
     });
 
     const data = await response.json();
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ reply: data.choices?.[0]?.message?.content })
+      body: JSON.stringify({
+        reply: data.choices?.[0]?.message?.content || "Вибач, не вдалося сформувати відповідь."
+      })
     };
   } catch (error) {
+    console.error("Server error:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ reply: "Помилка з боку сервера." })
