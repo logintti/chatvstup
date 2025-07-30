@@ -4,7 +4,7 @@ exports.handler = async function(event) {
   const body = JSON.parse(event.body || "{}");
   const userMessage = body.message || "";
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.vstupkey;
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
