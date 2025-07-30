@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Чат GPT</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
+    #chat { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 10px; background: #f9f9f9; }
+    input, button { padding: 10px; font-size: 16px; }
+    input { width: 70%; }
+    button { width: 25%; }
+  </style>
+</head>
+<body>
+<h2>Постав питання:</h2>
+<div id="chat"></div>
+<input id="userInput" placeholder="Ваше питання...">
+<button onclick="sendMessage()">Надіслати</button>
+
+<script>
+  async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
+    if (!message) return;
+
+    const chat = document.getElementById("chat");
+    chat.innerHTML += `<div><b>Ви:</b> ${message}</div>`;
+    input.value = "";
+
+    const response = await fetch("/.netlify/functions/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+    const reply = data.reply || "Вибач, сталася помилка.";
+    chat.innerHTML += `<div><b>Бот:</b> ${reply}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+  }
+</script>
+</body>
+</html>
